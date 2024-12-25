@@ -6,8 +6,14 @@ phases:
       - python -m pip install --upgrade pip
       - pip install -r requirements.txt
       - npm install -g aws-cdk
+      - echo Installing aws-cdk-lib==2.173.2...
+      - pip install aws-cdk-lib==2.173.2 
   build:
     commands:
+      - node -v  # Check Node.js version
+      - npm -v   # Check npm version
+      - pip -V # Check pip version
+      - python -V # Check  python version
       - echo Synthesizing CDK stack...
       - cdk synth
 artifacts:
