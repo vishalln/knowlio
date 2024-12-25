@@ -11,7 +11,6 @@ app = cdk.App()
 
 # Retrieve environment configurations from cdk.json context
 stages = app.node.get_context("stages")
-print(stages)
 
 # Define a new stack to wrap the pipeline creation
 # Explicitly set the environment for the pipeline stack
@@ -29,8 +28,6 @@ pipeline = codepipeline.Pipeline(
     pipeline_name="KnowlioPipeline",
 )
 
-
-
 # Add Source Stage
 pipeline.add_stage(
     stage_name="Source",
@@ -39,9 +36,9 @@ pipeline.add_stage(
             action_name="GitHubSource",
             owner="vishalln",
             repo="knowlio",
-            oauth_token=cdk.SecretValue.secrets_manager("github-token"),
+            oauth_token=cdk.SecretValue.secrets_manager("github-token-knowlio-4"),
             output=source_output,
-            branch="main",
+            branch="master",
         )
     ],
 )
