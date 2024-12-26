@@ -73,7 +73,7 @@ for stack_class, stack_name in stacks_to_deploy:
 
         # Create the stack instance dynamically
         stack_instance = stack_class(
-            stack,
+            app,
             f"{stack_name}-{stage['stage']}",
             env=cdk.Environment(
                 account=stage["account"],
@@ -85,7 +85,7 @@ for stack_class, stack_name in stacks_to_deploy:
         deploy_stage.add_action(actions.CloudFormationCreateUpdateStackAction(
             action_name=f"Deploy-{stack_name}-{stage['stage']}",
             stack_name=stack_instance.stack_name,
-            template_path=build_output.at_path(f"{stack_name}.template.json"),
+            template_path=build_output.at_path(f"{stack_name}-{stage['stage']}.template.json"),
             admin_permissions=True,
             extra_inputs=[build_output],
             region=stage["region"],
