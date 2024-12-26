@@ -89,8 +89,8 @@ for stage in stages:
         # Add CloudFormation deployment action to the stage
         deploy_stage.add_action(
             actions.CloudFormationCreateUpdateStackAction(
-                action_name=f"Deploy-{full_stack_name}",
-                stack_name=full_stack_name,
+                action_name=f"Deploy-{stack_name}",
+                stack_name={stack_name},
                 template_path=build_output.at_path(f"cdk.out/{stack_name}.template.json"),
                 admin_permissions=True,
                 extra_inputs=[build_output],
