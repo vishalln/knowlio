@@ -65,12 +65,16 @@ stacks_to_deploy = [
     (KnowlioStack, "KnowlioStack")  # You can add other stacks here in the future
 ]
 
-# Deploy Resources for each stack in Beta and Prod using the directly fetched stages
-for stack_class, stack_name in stacks_to_deploy:
-    for stage in stages:
+# Define stages for deployment: beta and prod
+for stage in stages:
+    # Create a deployment stage for each environment
+    deploy_stage = pipeline.add_stage(
+        stage_name=f"{stage['stage'].capitalize()}"  # Use stage name for clarity
+    )
+
+    # Deploy Resources for each stack in the given stage
+    for stack_class, stack_name in stacks_to_deploy:
         full_stack_name = f"{stack_name}-{stage['stage']}-{stage['region']}"
-        # Define a deployment stage in the pipeline
-        deploy_stage = pipeline.add_stage(stage_name=f"Deploy-{full_stack_name}")
 
         # Create the stack instance dynamically
         stack_instance = stack_class(
@@ -81,17 +85,19 @@ for stack_class, stack_name in stacks_to_deploy:
                 region=stage["region"]
             ),
         )
-        
-        # Add CloudFormation deployment action
-        deploy_stage.add_action(actions.CloudFormationCreateUpdateStackAction(
-            action_name=f"Deploy-{full_stack_name}",
-            stack_name=full_stack_name,
-            template_path=build_output.at_path(f"{full_stack_name}.template.json"),
-            admin_permissions=True,
-            extra_inputs=[build_output],
-            region=stage["region"],
-            account=stage["account"],
-        ))
 
+        # Add CloudFormation deployment action to the stage
+        deploy_stage.add_action(
+            actions.CloudFormationCreateUpdateStackAction(
+                action_name=f"Deploy-{full_stack_name}",
+                stack_name=full_stack_name,
+                template_path=build_output.at_path(f"cdk.out/{stack_name}.template.json"),
+                admin_permissions=True,
+                extra_inputs=[build_output],
+                region=stage["region"],
+                account=stage["account"],
+            )
+        )
 
+# Synthesize the app
 app.synth()
