@@ -15,7 +15,15 @@ phases:
       - pip -V # Check pip version
       - python -V # Check  python version
       - echo Synthesizing CDK stack...
-      - npx cdk synth
+      - npx cdk synth --output cdk.out
+      - cp cdk.out/*.template.json .  # Copy all template files to the root directory
 artifacts:
   files:
-    - "**/*"
+    - '*.template.json'
+    - 'cdk.out/**/*'
+  name: cdk-artifacts
+
+cache:
+  paths:
+    - '/root/.npm/**/*'
+    - '/root/.pip-cache/**/*'
