@@ -15,7 +15,7 @@ phases:
       - pip -V # Check pip version
       - python -V # Check  python version
       - echo Synthesizing CDK stack...
-      - cdk synth
+      - npx cdk synth
 artifacts:
   files:
     - "**/*"
