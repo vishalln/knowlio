@@ -68,24 +68,25 @@ stacks_to_deploy = [
 # Deploy Resources for each stack in Beta and Prod using the directly fetched stages
 for stack_class, stack_name in stacks_to_deploy:
     for stage in stages:
+        full_stack_name = f"{stack_name}-{stage['stage']}-{stage['region']}"
         # Define a deployment stage in the pipeline
-        deploy_stage = pipeline.add_stage(stage_name=f"Deploy-{stack_name}-{stage['stage']}-{stage['region']}")
+        deploy_stage = pipeline.add_stage(stage_name=f"Deploy-{full_stack_name}")
 
         # Create the stack instance dynamically
         stack_instance = stack_class(
             app,
-            f"{stack_name}-{stage['stage']}",
+            f"{full_stack_name}",
             env=cdk.Environment(
                 account=stage["account"],
                 region=stage["region"]
             ),
         )
-
+        
         # Add CloudFormation deployment action
         deploy_stage.add_action(actions.CloudFormationCreateUpdateStackAction(
-            action_name=f"Deploy-{stack_name}-{stage['stage']}",
-            stack_name=stack_instance.stack_name,
-            template_path=build_output.at_path(f"{stack_name}-{stage['stage']}.template.json"),
+            action_name=f"Deploy-{full_stack_name}",
+            stack_name=full_stack_name,
+            template_path=build_output.at_path(f"{full_stack_name}.template.json"),
             admin_permissions=True,
             extra_inputs=[build_output],
             region=stage["region"],
