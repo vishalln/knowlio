@@ -25,7 +25,7 @@ phases:
       - echo "Contents of current directory after copying:"
       - ls -la
       - echo "deploying all CDKs"
-      - npx cdk deploy --all --force
+      - npx cdk deploy --all --force --region us-west-2
 artifacts:
   files:
     - '*.template.json'
