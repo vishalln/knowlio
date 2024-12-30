@@ -10,6 +10,8 @@ class KnowlioStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
+        print("hoo")
+        print(os.path.join(os.path.dirname(__file__), "src"))
         lambda_function = _lambda.Function(self, "MyLambdaFunction",
             runtime=_lambda.Runtime.PYTHON_3_8,
             handler="lambda_function.handler",

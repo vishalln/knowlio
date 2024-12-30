@@ -17,6 +17,9 @@ phases:
       - echo Synthesizing CDK stack...
       - npx cdk synth --output cdk.out
       - cp cdk.out/*.template.json .  # Copy all template files to the root directory
+      - echo Copying Lambda source files to output directory...
+      - mkdir -p cdk.out/src  # Ensure src directory exists in cdk.out
+      - cp -R src/* cdk.out/src  # Copy Lambda source files to cdk.out/src
       - echo "Contents of current directory after copying:"
       - ls -la
 artifacts:
