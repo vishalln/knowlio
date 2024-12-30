@@ -17,15 +17,20 @@ phases:
       - echo Synthesizing CDK stack...
       - npx cdk synth --output cdk.out
       - cp cdk.out/*.template.json .  # Copy all template files to the root directory
+      - echo Zipping Lambda function code...
+      - zip -r lambda_function.zip knowlio/src 
       - echo Copying Lambda source files to output directory...
       - mkdir -p cdk.out/src  # Ensure src directory exists in cdk.out
       - cp -R knowlio/src/* cdk.out/src  # Copy Lambda source files to cdk.out/src
       - echo "Contents of current directory after copying:"
       - ls -la
+      - echo "deploying all CDKs"
+      - npx cdk deploy --all --force
 artifacts:
   files:
     - '*.template.json'
     - 'cdk.out/**/*'
+    - 'lambda_function.zip'
   name: cdk-artifacts
 
 cache:
